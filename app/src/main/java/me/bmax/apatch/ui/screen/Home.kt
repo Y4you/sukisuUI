@@ -1,5 +1,9 @@
 package me.bmax.apatch.ui.screen
 
+import me.bmax.apatch.ui.home.SukiStatusCard
+import me.bmax.apatch.ui.home.SukiStatsRow
+import me.bmax.apatch.ui.home.SukiInfoCard
+
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -422,11 +426,15 @@ fun HomeScreen(navigator: DestinationsNavigator) {
                         )
                     }
 
-                    KStatusCard(
-                        layout = homeLayout,
+                    SukiStatusCard(
                         state = state,
-                        onMainCardClick = onMainCardClick,
-                        onApmClick = onApmClick,
+                        onInstallClick = onMainCardClick,
+                    )
+
+                    SukiStatsRow(
+                        state = state,
+                        onSuperuserClick = onApmClick,
+                        onModuleClick = onApmClick,
                         onKpmClick = onKpmClick,
                     )
 
@@ -449,7 +457,7 @@ fun HomeScreen(navigator: DestinationsNavigator) {
                         )
                     }
 
-                    DeviceInfoCard(state = state)
+                    SukiInfoCard(state = state)
 
                     LearnMoreCard(onClick = { uriHandler.openUri("https://aster.mysqil.com") })
                     Spacer(Modifier.height(16.dp))
@@ -944,7 +952,7 @@ private fun SceneInfoCards(
             }
         }
 
-        DeviceInfoCard(state = state)
+        SukiInfoCard(state = state)
         LearnMoreCard(onClick = onLearnMore)
         Spacer(Modifier.height(bottomInset + 24.dp))
     }
