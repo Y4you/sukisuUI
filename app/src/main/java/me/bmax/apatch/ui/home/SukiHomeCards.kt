@@ -1,10 +1,19 @@
 package me.bmax.apatch.ui.home
 
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.CheckCircleOutline
-import androidx.compose.material.icons.rounded.ErrorOutline
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,24 +24,27 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import me.bmax.apatch.R
 import me.bmax.apatch.ui.component.miuix.StatusTagMiuix
+import me.bmax.apatch.util.Version
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
+import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.isDynamicColor
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
 
-@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun SukiStatusCard(
     state: HomeUiState,
     onInstallClick: () -> Unit,
 ) {
-    val isInstalled = state.conclusion == HomeConclusion.FULL_APATCH || state.conclusion == HomeConclusion.KERNEL_PATCH_ONLY
+    val isInstalled = state.conclusion == HomeConclusion.FULL_APATCH ||
+            state.conclusion == HomeConclusion.KERNEL_PATCH_ONLY
+
     if (isInstalled) {
         SukiActiveStatusCard(state = state, onClick = onInstallClick)
     } else {
@@ -49,6 +61,13 @@ private fun SukiActiveStatusCard(
     val accentColor = if (isDynamicColor) colorScheme.primary else Color(0xFFFF9CA8)
     val tagBackground = if (isDynamicColor) colorScheme.tertiaryContainer else Color(0xFFFFD9E2)
     val tagContent = if (isDynamicColor) colorScheme.onTertiaryContainer else Color(0xFF5E1128)
+    val managerVersion = remember { Version.getManagerVersion() }
+
+    val workingMode = when (state.conclusion) {
+        HomeConclusion.FULL_APATCH -> "APatch"
+        HomeConclusion.KERNEL_PATCH_ONLY -> "Kernel"
+        else -> "KP"
+    }
 
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -65,7 +84,7 @@ private fun SukiActiveStatusCard(
                     .align(Alignment.BottomEnd)
                     .offset(27.dp, 31.dp)
                     .size(150.dp),
-                imageVector = Icons.Rounded.CheckCircleOutline,
+                imageVector = MiuixIcons.Ok,
                 tint = accentColor.copy(alpha = if (isDynamicColor) 0.8f else 0.9f),
                 contentDescription = null
             )
@@ -81,7 +100,7 @@ private fun SukiActiveStatusCard(
                     verticalArrangement = Arrangement.spacedBy(6.dp),
                 ) {
                     StatusTagMiuix(
-                        label = "APatch",
+                        label = workingMode,
                         contentColor = if (isDynamicColor) colorScheme.onPrimary else Color.White,
                         backgroundColor = accentColor,
                     )
@@ -101,7 +120,7 @@ private fun SukiActiveStatusCard(
                         color = colorScheme.onSurface,
                     )
                     Text(
-                        text = "KP: ${state.capability.kernelPatch.version}",
+                        text = "KP: " + managerVersion.first + " (" + managerVersion.second + ")",
                         fontSize = 14.sp,
                         fontFamily = FontFamily.Monospace,
                         color = colorScheme.onSurfaceVariantSummary,
@@ -135,7 +154,7 @@ private fun SukiInactiveStatusCard(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Icon(
-                    imageVector = Icons.Rounded.ErrorOutline,
+                    imageVector = MiuixIcons.Close,
                     contentDescription = null,
                     tint = colorScheme.error,
                     modifier = Modifier.size(18.dp),
@@ -246,19 +265,19 @@ fun SukiInfoCard(state: HomeUiState) {
             )
             state.environment?.let { env ->
                 Text(
-                    text = "Kernel: ${env.kernelRelease}",
+                    text = "Kernel: " + env.kernelRelease,
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = colorScheme.onSurfaceVariantSummary,
                 )
                 Text(
-                    text = "Arch: ${env.primaryAbi}",
+                    text = "Arch: " + env.primaryAbi,
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = colorScheme.onSurfaceVariantSummary,
                 )
                 Text(
-                    text = "Android: ${env.androidRelease} (API ${env.androidApi})",
+                    text = "Android: " + env.androidRelease + " (API " + env.androidApi + ")",
                     fontSize = 12.sp,
                     fontFamily = FontFamily.Monospace,
                     color = colorScheme.onSurfaceVariantSummary,
