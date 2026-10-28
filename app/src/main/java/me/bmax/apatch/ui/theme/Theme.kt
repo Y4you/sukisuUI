@@ -198,9 +198,10 @@ fun APatchTheme(
 
 /** The preset colour as a seed, and the last resort when no other source can offer one. */
 internal fun presetThemeSeed(colorName: String?): Int =
-    (LegacyMiuixThemeSeeds[colorName] ?: LegacyMiuixThemeSeeds.getValue("blue")).toArgb()
+    (LegacyMiuixThemeSeeds[colorName] ?: LegacyMiuixThemeSeeds.getValue("suki")).toArgb()
 
 private val LegacyMiuixThemeSeeds = mapOf(
+    "suki" to Color(0xFFFF9CA8),
     "amber" to Color(0xFFFFC107),
     "blue_grey" to Color(0xFF607D8B),
     "blue" to Color(0xFF2196F3),

@@ -59,7 +59,7 @@ internal const val SystemDynamicColorKey = "use_system_color_theme"
 internal const val PresetColorKey = "custom_color"
 
 /** The colour a preset name falls back to, so an unknown name is never a broken theme. */
-internal const val DefaultPresetColor = "blue"
+internal const val DefaultPresetColor = "suki"
 
 /**
  * The sources in the order they are offered: what follows the phone first, the colour of the
